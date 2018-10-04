@@ -1,0 +1,88 @@
+select pagos.idpagos as pago_nro, empleados.id as empleado_id, empleados.cedula, empleados.nombre, empleados.apellido, empleados.fecha_ingreso, empleados.tipo_contrato, empleados.profesion, empleados.departamento, empleados.cargo, pagos.fecha, pagos.monto, conceptos.tipo, conceptos.descripcion from pagos
+inner join empleados on empleados.id =  pagos.empleados_id
+inner join conceptos on pagos.conceptos_id = conceptos.id
+order by pagos.idpagos
+
+select empleados.id, empleados.cedula, empleados.nombre, empleados.apellido, empleados.fecha_ingreso, empleados.tipo_contrato, empleados.profesion, empleados.departamento, empleados.cargo, pagos.fecha, pagos.monto, conceptos.tipo, conceptos.descripcion from pagos
+inner join empleados on empleados.id =  pagos.empleados_id
+inner join conceptos on pagos.conceptos_id = conceptos.id
+where conceptos.tipo = 'asignacion'
+and empleados.cedula = '17201169'
+and pagos.fecha between '2018-11-01' and '2018-11-31'
+order by pagos.fecha desc;
+
+-- Adminer 4.6.3 MySQL dump
+
+SET NAMES utf8;
+SET time_zone = '+00:00';
+SET foreign_key_checks = 0;
+SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
+
+DROP TABLE IF EXISTS `conceptos`;
+CREATE TABLE `conceptos` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `tipo` varchar(45) NOT NULL,
+  `descripcion` varchar(256) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `conceptos` (`id`, `tipo`, `descripcion`) VALUES
+(136, 'Asignacion', 'Sueldo'),
+(137, 'Asignacion', 'Prima profesionalizacion'),
+(138, 'Asignacion', 'Prima responsabilidad'),
+(139, 'Deduccion',  'Monte pio'),
+(140, 'Deduccion',  'IVSS'),
+(141, 'Deduccion',  'FAOV');
+
+DROP TABLE IF EXISTS `empleados`;
+CREATE TABLE `empleados` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `cedula` int(11) NOT NULL,
+  `nombre` varchar(25) NOT NULL,
+  `apellido` varchar(30) NOT NULL,
+  `fecha_nacimiento` date NOT NULL,
+  `telefono` varchar(30) NOT NULL,
+  `fecha_ingreso` date NOT NULL,
+  `tipo_contrato` varchar(50) NOT NULL,
+  `profesion` varchar(256) NOT NULL,
+  `departamento` varchar(256) NOT NULL,
+  `cargo` varchar(256) NOT NULL,
+  `observaciones` text NOT NULL,
+  `activo` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `empleados` (`id`, `cedula`, `nombre`, `apellido`, `fecha_nacimiento`, `telefono`, `fecha_ingreso`, `tipo_contrato`, `profesion`, `departamento`, `cargo`, `observaciones`, `activo`) VALUES
+(64,  17201169, 'Vioscar',  'Rivero', '1985-05-31', '04262477354',  '2007-05-16', 'fijo', 'TSU Informatica',  'Informatica',  'Programador II', '', 1),
+(65,  15513131, 'Laurimar', 'De Sousa', '1982-09-22', '04161408081',  '2008-05-16', 'determinado',  'Ing. Sistemas',  'Informatica',  'Coordinador',  '', 0);
+
+DROP TABLE IF EXISTS `pagos`;
+CREATE TABLE `pagos` (
+  `idpagos` int(11) NOT NULL AUTO_INCREMENT,
+  `fecha` date NOT NULL,
+  `empleados_id` int(11) NOT NULL,
+  `conceptos_id` int(11) NOT NULL,
+  `monto` varchar(45) NOT NULL,
+  PRIMARY KEY (`idpagos`,`empleados_id`,`conceptos_id`),
+  KEY `fk_pagos_conceptos_idx` (`conceptos_id`),
+  KEY `fk_pagos_empleados2_idx` (`empleados_id`),
+  CONSTRAINT `fk_pagos_conceptos0` FOREIGN KEY (`conceptos_id`) REFERENCES `conceptos` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_pagos_empleados2` FOREIGN KEY (`empleados_id`) REFERENCES `empleados` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `pagos` (`idpagos`, `fecha`, `empleados_id`, `conceptos_id`, `monto`) VALUES
+(1, '2018-10-03', 64, 136,  '3600'),
+(2, '2018-10-03', 64, 137,  '400'),
+(3, '2018-10-03', 64, 138,  '200'),
+(4, '2018-10-03', 64, 139,  '50'),
+(5, '2018-10-03', 64, 140,  '20'),
+(6, '2018-10-03', 64, 141,  '100'),
+(7, '2018-10-03', 65, 136,  '3800'),
+(8, '2018-10-03', 65, 137,  '420'),
+(9, '2018-10-03', 65, 138,  '200'),
+(10,  '2018-10-03', 65, 139,  '50'),
+(11,  '2018-10-03', 65, 140,  '25'),
+(12,  '2018-10-03', 65, 141,  '85'),
+(15,  '2018-11-16', 64, 136,  '3600');
+
+-- 2018-10-04 04:01:34
