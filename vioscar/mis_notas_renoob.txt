@@ -1,0 +1,39 @@
+Bitacora de cambios
+
+1. Crear autenticacion mediante artisan
+
+    php artisan make:auth
+    php artisan migrate
+
+2. Desde un seeder, crear los primeros usuarios para loguear en la aplicacion
+
+    Nota: Los modelos estan nomnbrados en singular, los Seeders en Plural + TableSeeder (Model=User / Seeder=UsersTableSeeder). Aqui se generaran los usuarios con los nombres, email, claves y demas valores que deseemos colocar a los usuarios.
+
+        php artisan make:seeder UsersTableSeeder
+
+    Agregar en app/database/seeds/UsersTableSeeder.php
+
+        public function run()
+        {
+            DB::table('users')->insert([
+                'name' => 'Usuario Uno',
+                'email' => 'usuariouno@email.tld',
+                'password' => bcrypt('123456'),
+            ]);
+
+            DB::table('users')->insert([
+                'name' => 'Usuario Dos',
+                'email' => 'usuariodos@email.tld',
+                'password' => bcrypt('123456'),
+            ]);
+        }
+
+    Habilitar la ejecucion de este seeder en app/database/seeds/DatabaseSeeder.php descomentando la linea:
+
+        // $this->call(UsersTableSeeder::class);
+    
+    Ejecutar el seeder:
+
+        php artisan db:seed
+
+3. 
