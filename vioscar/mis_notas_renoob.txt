@@ -26,6 +26,71 @@ Traer mi repositorio desde git e instalarlo para continuar desarrollandolo
     php artisan migrate --seed
     php artisan key:generate
 
+#################################################################################
+Eliminar una carpeta del repositorio git (manteniendola en local, ejm: nbproject)
+#################################################################################
+
+http://git.linuxfunder.com/cmo-excluir-files-en-git-repo.html
+https://www.bufa.es/git-borrar-archivos-carpetas/
+
+Para borrar archivos o carpetas también “arriba” en nuestro respositorio (bitbucket, github…) se usa el comando “rm” de git siguiendo los siguientes pasos.
+
+    * Si quieres eliminar un archivo:
+        git rm --cached -r miarchivo.php
+
+    * Si quieres eliminar una carpeta:
+        git rm --cached -r micarpeta
+
+    * Creamos el commit
+        git commit -m "elimino archivos innecesarios"
+
+    * Subimos los cambios al repositorio
+        git push
+
+http://git.linuxfunder.com/cmo-excluir-files-en-git-repo.html
+
+####################
+Revertir push en git 
+####################
+
+http://www.7sabores.com/blog/como-revertir-un-push-git
+
+Si por alguna razón necesitamos revertir los archivos de nuestro repositorio de Git a un push anterior, debemos seguir los siguientes pasos.
+
+    1. Obtener hash ids de los últimos commits.
+    En necesario Identificar el hash id del commit al que queremos regresar, con el siguiente comando vamos a ver los últimos 10 ids:
+
+        $ git log -10 --pretty="%H"
+
+        30ace57438659c6a715db441ffc6751f385db667
+        484121a5ed21e8b842ffe61783fde059103185b3
+        996ee5f0aabd18d14a73e0181780dcc9191337f4
+        2b0ea751d69c84b909b3011ba5de865125d209b2
+        944385404a3468fe6665be2d8cf1a71a5c995196
+        6b832d19e44d298d60c99a382f9e7e282c9c16f2
+        fad00716beff7b48890f0a96d82780bea685f39e
+        4339ddc09724d93bac456221a0c369c3d5a62c89
+        cf9a82f09bb799c2449854ba7d33ddf2cfff3b84
+        adf47c09992f147ab2b631713cc8dd612f21e83d
+
+    2. Retornar al commit deseado.
+    Cuando hayamos identificado el commit al que deseamos regresar nuestro repositorio debemos ejecutar un comando similar al siguiente.
+
+        $ git reset --hard 484121a5ed21e8b842ffe61783fde059103185b3
+        HEAD is now at 484121a
+
+    3. Enviar los cambios al repositorio.
+    Ahora debemos enviar los cambios al repositorio con el siguiente comando.
+
+        git push --force
+
+    4. Actualizar repositorios.
+    Si tenemos algún clone del provecto en otro lugar, debemos hacer checkout del commit al que deseamos volver ejecutando el siguiente comando.
+
+        git checkout 484121a5ed21e8b842ffe61783fde059103185b3
+
+Espero les sea de utilidad.
+
 ######################
 Bitacora de desarrollo
 ######################
