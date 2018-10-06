@@ -1,39 +1,228 @@
-Bitacora de cambios
+##########################################################################
+Traer mi repositorio desde git e instalarlo para continuar desarrollandolo
+##########################################################################
 
-1. Crear autenticacion mediante artisan
+    Editar C:\Windows\System32\drivers\etc\hosts y agregar 182.168.0.125 vouchers-fundacite.test
 
-    php artisan make:auth
-    php artisan migrate
+    Editar homestead.yaml
 
-2. Desde un seeder, crear los primeros usuarios para loguear en la aplicacion
+        Agregar en el apartado sites:
 
-    Nota: Los modelos estan nomnbrados en singular, los Seeders en Plural + TableSeeder (Model=User / Seeder=UsersTableSeeder). Aqui se generaran los usuarios con los nombres, email, claves y demas valores que deseemos colocar a los usuarios.
+            - map: vouchers-fundacite.test
+              to: /home/vagrant/proyectos/vouchers-fundacite/public
 
-        php artisan make:seeder UsersTableSeeder
+        Agregar en el apartado databases:
 
-    Agregar en app/database/seeds/UsersTableSeeder.php
+            - vouchers-fundacite
 
-        public function run()
-        {
-            DB::table('users')->insert([
-                'name' => 'Usuario Uno',
-                'email' => 'usuariouno@email.tld',
-                'password' => bcrypt('123456'),
-            ]);
+    git clone git://github.com/szchmausser/vouchers-fundacite.git
 
-            DB::table('users')->insert([
-                'name' => 'Usuario Dos',
-                'email' => 'usuariodos@email.tld',
-                'password' => bcrypt('123456'),
-            ]);
-        }
+    cd hasta/Homestead
+    vagrant ssh
 
-    Habilitar la ejecucion de este seeder en app/database/seeds/DatabaseSeeder.php descomentando la linea:
+    cd hasta/proyecto
+    composer install
+    mv .env.example .env (indicar en .env la base de datos a utilizar)
+    php artisan migrate --seed
+    php artisan key:generate
 
-        // $this->call(UsersTableSeeder::class);
+######################
+Bitacora de desarrollo
+######################
+
+### Instalar Laravel 5 IDE Helper Generator (Solo por primera vez)
+
+https://www.youtube.com/watch?v=__QLbIo1AwQ
+
+    composer require barryvdh/laravel-ide-helper
+
+    After updating composer, add the service provider to the providers array in config/app.php
+
+        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+
+    php artisan ide-helper:generate
+
+    En composer.json agregar en la seccion de scripts lo relacionado a "post-update-cmd":
+
+        "scripts":{
+            "post-update-cmd": [
+                "Illuminate\\Foundation\\ComposerScripts::postUpdate",
+                "php artisan ide-helper:generate",
+                "php artisan ide-helper:meta"
+            ]
+        },
+
+    php artisan vendor:publish --provider="Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider" --tag=config
+
+    Automatic phpDocs for models
+
+        composer require doctrine/dbal
+
+        php artisan ide-helper:models Post User
+
+    Automatic phpDocs generation for Laravel Fluent methods
+
+        After publishing vendor, simply change the include_fluent line your config/ide-helper.php file into:
+
+        'include_fluent' => true,
+
+### Crear sistema de autenticacion y primeros usuarios
+
+    1. Crear autenticacion mediante artisan
+
+        php artisan make:auth
+        php artisan migrate
+
+    2. Desde un seeder, crear los primeros usuarios para loguear en la aplicacion
+
+        Nota: Los modelos estan nomnbrados en singular, los Seeders en Plural + TableSeeder (Model=User / Seeder=UsersTableSeeder). Aqui se generaran los usuarios con los nombres, email, claves y demas valores que deseemos colocar a los usuarios.
+
+            php artisan make:seeder UsersTableSeeder
+
+        Agregar en app/database/seeds/UsersTableSeeder.php
+
+            public function run()
+            {
+                DB::table('users')->insert([
+                    'name' => 'Usuario Uno',
+                    'email' => 'usuariouno@email.tld',
+                    'password' => bcrypt('123456'),
+                ]);
+
+                DB::table('users')->insert([
+                    'name' => 'Usuario Dos',
+                    'email' => 'usuariodos@email.tld',
+                    'password' => bcrypt('123456'),
+                ]);
+            }
+
+        Habilitar la ejecucion de este seeder en app/database/seeds/DatabaseSeeder.php descomentando la linea:
+
+            // $this->call(UsersTableSeeder::class);
+
+        Ejecutar el seeder:
+
+            php artisan db:seed
+
+### Pagina para mostrar todos los pagos
+
+    - Crear rutas
+
+        Editar routes/web.php y agregar:
+
+        Route::resource('empleados', 'EmpleadoController');
+        Route::resource('conceptos', 'ConceptoController');
+        Route::resource('pagos', 'PagoController');
+
+    - Crear controlador
+
+        php artisan make:controller PagoController --resource
+        php artisan make:controller EmpleadoController --resource
+        php artisan make:controller ConceptoController --resource
+
+        Verificar nuevas rutas con artisan: artisan route:list
+
+    - Crear modelo (y su migracion)
+
+        php artisan make:model Empleado -m
+
+        En la migracion del modelo Empleado, crear la estructura de la tabla empleados:
+
+            $table->increments('id');
+            $table->integer('cedula');
+            $table->string('nombre');
+            $table->string('apellido');
+            $table->date('fecha_nacimiento');
+            $table->string('telefono');
+            $table->date('fecha_ingreso');
+            $table->string('tipo_contrato');
+            $table->string('profesion');
+            $table->string('departamento');
+            $table->string('cargo');
+            $table->string('observaciones');
+            $table->boolean('activo');
+            $table->timestamps();
+
+        php artisan make:model Concepto -m
+
+        En la migracion del modelo Concepto, crear la estructura de la tabla conceptos:
+
+            $table->increments('id');
+            $table->string('tipo');
+            $table->string('descripcion');
+            $table->timestamps();
+
+        php artisan make:model Pago -m
+
+        En la migracion del modelo Pago, crear la estructura de la tabla pagos:
+
+            $table->increments('id');
+            $table->date('fecha');
+            $table->unsignedInteger('empleado_id');
+            $table->unsignedInteger('concepto_id');
+            $table->integer('monto');
+            
+            $table->foreign('empleado_id')->references('id')->on('empleados');
+            $table->foreign('concepto_id')->references('id')->on('conceptos');
+            
+            $table->timestamps();
+
+    - Llenar manualmente las tablas en la base de datos
+
+        Tabla empleados:
+
+            INSERT INTO `empleados` (`id`, `cedula`, `nombre`, `apellido`, `fecha_nacimiento`, `telefono`, `fecha_ingreso`, `tipo_contrato`, `profesion`, `departamento`, `cargo`, `observaciones`, `activo`, `created_at`, `updated_at`) VALUES
+            (1, 17201169,   'Vioscar',  'Rivero',   '1985-05-31',   '04262477354',  '2007-05-16',   'fijo', 'T.S.U Informatica',    'Informatica',  'Programador II',   '', 1,  NULL,   NULL),
+            (2, 15513131,   'Laurimar', 'De Sousa', '1982-09-22',   '04161408081',  '2008-05-16',   'contratado',   'Ing. de Sistemas', 'Informatica',  'Coordinador',  '', 0,  NULL,   NULL);
+
+        Tabla conceptos:
+
+            INSERT INTO `conceptos` (`id`, `tipo`, `descripcion`, `created_at`, `updated_at`) VALUES
+            (1, 'Asignacion',   'Sueldo',   NULL,   NULL),
+            (2, 'Asignacion',   'Prima de profesionalizacion',  NULL,   NULL),
+            (3, 'Asignacion',   'Prima por hijos',  NULL,   NULL),
+            (4, 'Deduccion',    'I.V.S.S',  NULL,   NULL),
+            (5, 'Deduccion',    'Caja de ahorros',  NULL,   NULL);
+
+        Tabla pagos:
+
+            INSERT INTO `pagos` (`id`, `fecha`, `empleado_id`, `concepto_id`, `monto`, `created_at`, `updated_at`) VALUES
+            (2, '2018-01-15',   1,  1,  1800,   NULL,   NULL),
+            (3, '2018-01-15',   1,  2,  220,    NULL,   NULL),
+            (4, '2018-01-15',   1,  3,  150,    NULL,   NULL),
+            (5, '2018-01-15',   1,  4,  50, NULL,   NULL),
+            (6, '2018-01-15',   1,  5,  20, NULL,   NULL);
+
+    - Crear vista
+        
+        Crear empleados.blade.php / conceptos.blade.php / pagos.blade.php sin contenido alguno.
+
+    - Mostrar registros de la base de datos en la vista de forma rapida
+
+        Agregar llamado al modelo Empleado y consulta de datos del modelo en la funcion index()
+
+        En EmpleadoController.php
     
-    Ejecutar el seeder:
+            use App\Empleado;
 
-        php artisan db:seed
+            return $empleados = Empleado::all();
 
-3. 
+        En ConceptoController.php agregar:
+
+            use App\Concepto;
+
+            return $conceptos = Concepto::all();
+
+        En PagoController.php agregar:
+
+            use App\Pago;
+            
+            return $pagos = Pago::all();
+
+    - Editar la vista welcome.php y agregar enlaces a cada vista
+
+            <a href="{{action('EmpleadoController@index')}}">Empleados</a>
+            <a href="{{action('ConceptoController@index')}}">Conceptos</a>
+            <a href="{{action('PagoController@index')}}">Pagos</a>
+
+        Abrir los enlaces correspondientes y observar los datos extraidos desde la base de datos.
