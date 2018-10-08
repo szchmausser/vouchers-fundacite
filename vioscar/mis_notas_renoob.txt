@@ -260,11 +260,11 @@ https://www.youtube.com/watch?v=__QLbIo1AwQ
         Tabla pagos:
 
             INSERT INTO `pagos` (`id`, `fecha`, `empleado_id`, `concepto_id`, `monto`, `created_at`, `updated_at`) VALUES
-            (2, '2018-01-15',   1,  1,  1800,   NULL,   NULL),
-            (3, '2018-01-15',   1,  2,  220,    NULL,   NULL),
-            (4, '2018-01-15',   1,  3,  150,    NULL,   NULL),
-            (5, '2018-01-15',   1,  4,  50, NULL,   NULL),
-            (6, '2018-01-15',   1,  5,  20, NULL,   NULL);
+            (1, '2018-01-15',   1,  1,  1800,   NULL,   NULL),
+            (2, '2018-01-15',   1,  2,  220,    NULL,   NULL),
+            (3, '2018-01-15',   1,  3,  150,    NULL,   NULL),
+            (4, '2018-01-15',   1,  4,  50, NULL,   NULL),
+            (5, '2018-01-15',   1,  5,  20, NULL,   NULL);
 
     - Crear vista
         
@@ -333,43 +333,37 @@ https://www.youtube.com/watch?v=fJmSZVQIbXs
             return $this->hasMany(Pago::class);
         }
 
-    Controlador: PagoController.php@index
+#########################################################
+Consultar registros y sus datos relacionados con eloquent
+#########################################################
 
-        <!--Buscar un registro en especifico-->
-        -------------------------------------------------------------
-            //buscar un pago en especifico
-            $pagos = Pago::find(7);
+https://laraveles.com/foro/viewtopic.php?id=5787
 
-            //Consultar datos relacionados y almacenarlo en una variable
-            $valores = $pagos->empleado->cedula;
+routes/web.php
 
-            //Enviar los datos almacenados en la variable a la vista
-            return view('pagos',compact('valores'));
-        -------------------------------------------------------------
+    Route::get('/pruebas', 'PagoController@pruebas')->name('pruebas');
 
-        <!--Buscar todos los registros-->
-        -------------------------------------------------------------
-            //buscar todos los registros y almacenarlo en una variable
-            $valores = Pago::all();
+PagoController@pruebas
 
-            //Enviar los datos almacenados en la variable a la vista
-            return view('pagos',compact('valores'));
+    public function pruebas(){
 
-    Vista: pagos.blade.php
+        $pagos = Pago::findOrfail(5);    
+        $empleado = $pagos->empleado;
+        $concepto =  $pagos->concepto;
+        
+        return view('pruebas', compact('pagos','empleado','concepto'));
+        
+    }
 
-        <!--Mostrar variable que almacena un unico registro-->
-        -------------------------------------------------------------
-            {{$valores}}
-        -------------------------------------------------------------
+pruebas.blade.php
 
-        <!--Mostrar variable que almacena multiples registros-->
-        -------------------------------------------------------------
-            @foreach ($valores as $valor)
-                <li>{{ $valor->monto }}</li>
-                <li>{{ $valor->concepto->descripcion }}</li>
-                <li>{{ $valor->empleado->cedula }}</li>
-                <li>{{ $valor->empleado->nombre }}</li>
-                <li>{{ $valor->empleado->apellido }}</li>
-                <br />
-            @endforeach
-        -------------------------------------------------------------
+    <li>empleado_id: {{$pagos->empleado_id}}</li>
+    <li>empleado_nombre: {{$empleado->nombre}}</li>
+    <br />
+    <li>pagos_id:{{$pagos->id}}</li>
+    <li>pagos_fecha: {{$pagos->fecha}}</li>
+    <li>pagos_monto: {{$pagos->monto}}</li>
+    <br />
+    <li>concepto_id: {{$pagos->concepto_id}}</li>
+    <li>concepto_tipo: {{$concepto->tipo}}</li>
+    <li>concepto_descripcion: {{$concepto->descripcion}}</li>

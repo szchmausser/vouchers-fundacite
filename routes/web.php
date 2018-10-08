@@ -24,3 +24,5 @@ Route::resource('conceptos', 'ConceptoController');
 Route::resource('pagos', 'PagoController');
 
 Route::get('buscar/{fecha_inicio}/{fecha_fin}/{buscar}','PagoController@buscar')->name('buscar');
+
+Route::get('/pruebas', 'PagoController@pruebas')->name('pruebas');

@@ -14,6 +14,16 @@ class PagoController extends Controller
      * @return \Illuminate\Http\Response
      */
     
+    public function pruebas(){
+
+        $pagos = Pago::findOrfail(5);    
+        $empleado = $pagos->empleado;
+        $concepto =  $pagos->concepto;
+        
+        return view('pruebas', compact('pagos','empleado','concepto'));
+        
+    }
+
     public function index()
     { 
         //https://laracasts.com/discuss/channels/eloquent/eloquent-equivalent-of-inner-join?page=1
@@ -48,6 +58,7 @@ class PagoController extends Controller
         
         return view('pagos',compact('empleado','asignaciones','deducciones'));
     }
+    
     public function buscar($fecha_inicio, $fecha_fin, $buscar)
     {        
         //https://laracasts.com/discuss/channels/eloquent/eloquent-equivalent-of-inner-join?page=1
