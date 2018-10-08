@@ -32,20 +32,21 @@ Eliminar una carpeta del repositorio git (manteniendola en local, ejm: nbproject
 
 http://git.linuxfunder.com/cmo-excluir-files-en-git-repo.html
 https://www.bufa.es/git-borrar-archivos-carpetas/
+https://code.i-harness.com/es/q/6054a6
 
 Para borrar archivos o carpetas también “arriba” en nuestro respositorio (bitbucket, github…) se usa el comando “rm” de git siguiendo los siguientes pasos.
 
-    * Si quieres eliminar un archivo:
+    * Si quieres eliminar un archivo (manteniendo la copia local):
         git rm --cached -r miarchivo.php
 
-    * Si quieres eliminar una carpeta:
+    * Si quieres eliminar una carpeta (manteniendo la copia local):
         git rm --cached -r micarpeta
 
     * Creamos el commit
         git commit -m "elimino archivos innecesarios"
 
     * Subimos los cambios al repositorio
-        git push
+        git push origin master
 
 http://git.linuxfunder.com/cmo-excluir-files-en-git-repo.html
 
@@ -291,3 +292,77 @@ https://www.youtube.com/watch?v=__QLbIo1AwQ
             <a href="{{action('PagoController@index')}}">Pagos</a>
 
         Abrir los enlaces correspondientes y observar los datos extraidos desde la base de datos.
+
+#############################################################################
+Establecer relaciones entre modelos, consultar datos y mostrarlos en la vista
+#############################################################################
+
+Nota: La tabla que contiene la clave externa "pertenece/belongsTo" a un registro en otra tabla.
+https://www.youtube.com/watch?v=fJmSZVQIbXs
+
+    Modelo: Pago.php
+
+        public function empleado()
+        {
+            return $this->belongsTo(Empleado::class);   //empleado_id
+        }
+
+        public function concepto()
+        {
+            return $this->belongsTo(Concepto::class);   //concepto_id
+        }
+
+    Modelo: Empleado.php
+
+        public function pagos()
+        {
+            return $this->hasMany(Pago::class);
+        }
+
+    Modelo: Concepto.php
+
+        public function pagos()
+        {
+            return $this->hasMany(Pago::class);
+        }
+
+    Controlador: PagoController.php@index
+
+        <!--Buscar un registro en especifico-->
+        -------------------------------------------------------------
+            //buscar un pago en especifico
+            $pagos = Pago::find(7);
+
+            //Consultar datos relacionados y almacenarlo en una variable
+            $valores = $pagos->empleado->cedula;
+
+            //Enviar los datos almacenados en la variable a la vista
+            return view('pagos',compact('valores'));
+        -------------------------------------------------------------
+
+        <!--Buscar todos los registros-->
+        -------------------------------------------------------------
+            //buscar todos los registros y almacenarlo en una variable
+            $valores = Pago::all();
+
+            //Enviar los datos almacenados en la variable a la vista
+            return view('pagos',compact('valores'));
+
+    Vista: pagos.blade.php
+
+        <!--Mostrar variable que almacena un unico registro-->
+        -------------------------------------------------------------
+            {{$valores}}
+        -------------------------------------------------------------
+
+        <!--Mostrar variable que almacena multiples registros-->
+        -------------------------------------------------------------
+            @foreach ($valores as $valor)
+                <li>{{ $valor->monto }}</li>
+                <li>{{ $valor->concepto->descripcion }}</li>
+                <li>{{ $valor->empleado->cedula }}</li>
+                <li>{{ $valor->empleado->nombre }}</li>
+                <li>{{ $valor->empleado->apellido }}</li>
+                <br />
+            @endforeach
+        -------------------------------------------------------------

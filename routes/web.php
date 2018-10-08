@@ -22,3 +22,5 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::resource('empleados', 'EmpleadoController');
 Route::resource('conceptos', 'ConceptoController');
 Route::resource('pagos', 'PagoController');
+
+Route::get('buscar/{fecha_inicio}/{fecha_fin}/{buscar}','PagoController@buscar')->name('buscar');
