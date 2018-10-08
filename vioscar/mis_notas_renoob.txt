@@ -93,6 +93,13 @@ Si por alguna razón necesitamos revertir los archivos de nuestro repositorio de
 Espero les sea de utilidad.
 
 ######################
+Subir cambios a GitHub
+######################
+
+git commit -a -m "Dando forma a los repostes desde la ruta /pagos y la ruta /buscar"
+git push origin master
+
+######################
 Bitacora de desarrollo
 ######################
 
