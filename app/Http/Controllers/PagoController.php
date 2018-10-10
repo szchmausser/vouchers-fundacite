@@ -12,82 +12,44 @@ class PagoController extends Controller
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
-     */
+     */     
     
-    public function pruebas(){
+    public function pruebas($fecha_inicio, $fecha_fin, $empleado_objetivo){
+        
+        $empleado = Pago::
+            join('empleados','pagos.empleado_id', '=', 'empleados.id')
+            ->where('empleado_id','=',$empleado_objetivo)
+            ->first();
 
-        $pagos = Pago::findOrfail(5);    
-        $empleado = $pagos->empleado;
-        $concepto =  $pagos->concepto;
+        $asignaciones = Pago::
+            join('conceptos','pagos.concepto_id', '=', 'conceptos.id')
+            ->where('empleado_id','=',$empleado_objetivo)
+            ->whereBetween('fecha', array($fecha_inicio, $fecha_fin))
+            ->where('conceptos.tipo','=','Asignacion')
+            ->get();
         
-        return view('pruebas', compact('pagos','empleado','concepto'));
+        $deducciones = Pago::
+            join('conceptos','pagos.concepto_id', '=', 'conceptos.id')
+            ->where('empleado_id','=',$empleado_objetivo)
+            ->whereBetween('fecha', array($fecha_inicio, $fecha_fin))
+            ->where('conceptos.tipo','=','Deduccion')
+            ->get();
         
+        return view('pagos', compact('fecha_inicio','fecha_fin','empleado','asignaciones','deducciones'));
+
     }
-
+    
     public function index()
     { 
-        //https://laracasts.com/discuss/channels/eloquent/eloquent-equivalent-of-inner-join?page=1
-        //https://laravel.io/forum/07-21-2015-eloquent-between-two-dates-from-database
-        //https://richos.gitbooks.io/laravel-5/content/capitulos/chapter7.html
-        //https://es.stackoverflow.com/questions/176828/consulta-m%C3%BAltiples-tablas-con-laravel-eloquent
-        //https://es.stackoverflow.com/questions/115244/como-consultar-registros-entre-dos-tablas-relacionadas-en-laravel
+        //Buscar un pagos
+        dd ($todos_pagos = Pago::all());
         
-        $buscar = '17201169';
-        $fecha_inicio = '2018-01-01';
-        $fecha_fin = '2018-01-31';
+        //return $pagos = $todos_pagos->where('empleado_id','=', 1)->where('fecha','>=','2018-01-16')->where('fecha','<=','2018-01-31');
         
-        $empleado = Empleado::where('cedula',$buscar)->first();
-        
-        $asignaciones = Pago
-            ::join('empleados','pagos.empleado_id', '=', 'empleados.id')
-            ->join('conceptos','pagos.concepto_id', '=', 'conceptos.id')
-            ->whereBetween('fecha', array($fecha_inicio, $fecha_fin))
-            ->where('empleados.cedula','=',$buscar)
-            ->where('conceptos.tipo','=','Asignacion')
-            ->select('pagos.monto','conceptos.descripcion')
-            ->get();
-        
-        $deducciones = Pago
-            ::join('empleados','pagos.empleado_id', '=', 'empleados.id')
-            ->join('conceptos','pagos.concepto_id', '=', 'conceptos.id')
-            ->whereBetween('fecha', array($fecha_inicio, $fecha_fin))
-            ->where('empleados.cedula','=',$buscar)
-            ->where('conceptos.tipo','=','Deduccion')
-            ->select('pagos.monto','conceptos.descripcion')
-            ->get();
-        
-        return view('pagos',compact('empleado','asignaciones','deducciones'));
-    }
-    
-    public function buscar($fecha_inicio, $fecha_fin, $buscar)
-    {        
-        //https://laracasts.com/discuss/channels/eloquent/eloquent-equivalent-of-inner-join?page=1
-        //https://laravel.io/forum/07-21-2015-eloquent-between-two-dates-from-database
-        //https://richos.gitbooks.io/laravel-5/content/capitulos/chapter7.html
-        //https://es.stackoverflow.com/questions/176828/consulta-m%C3%BAltiples-tablas-con-laravel-eloquent
-        //https://es.stackoverflow.com/questions/115244/como-consultar-registros-entre-dos-tablas-relacionadas-en-laravel
-               
-        $empleado = Empleado::where('cedula',$buscar)->first();
-        
-        $asignaciones = Pago
-            ::join('empleados','pagos.empleado_id', '=', 'empleados.id')
-            ->join('conceptos','pagos.concepto_id', '=', 'conceptos.id')
-            ->whereBetween('fecha', array($fecha_inicio, $fecha_fin))
-            ->where('empleados.cedula','=',$buscar)
-            ->where('conceptos.tipo','=','Asignacion')
-            ->select('pagos.monto','conceptos.descripcion')
-            ->get();
-        
-        $deducciones = Pago
-            ::join('empleados','pagos.empleado_id', '=', 'empleados.id')
-            ->join('conceptos','pagos.concepto_id', '=', 'conceptos.id')
-            ->whereBetween('fecha', array($fecha_inicio, $fecha_fin))
-            ->where('empleados.cedula','=',$buscar)
-            ->where('conceptos.tipo','=','Deduccion')
-            ->select('pagos.monto','conceptos.descripcion')
-            ->get();
-        
-        return view('pagos',compact('empleado','asignaciones','deducciones'));
+        //$asignaciones = $pagos->concepto->where('tipo','=','Asignacion')->get();
+        //$deducciones = $pagos->concepto->where('tipo','=','Deduccion')->get();
+
+        //return view('pagos',compact('pagos','empleado','asignaciones','deducciones'));
     }
 
     /**

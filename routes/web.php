@@ -25,4 +25,4 @@ Route::resource('pagos', 'PagoController');
 
 Route::get('buscar/{fecha_inicio}/{fecha_fin}/{buscar}','PagoController@buscar')->name('buscar');
 
-Route::get('/pruebas', 'PagoController@pruebas')->name('pruebas');
+Route::get('/pruebas/{fecha_inicio}/{fecha_fin}/{empleado_objetivo}', 'PagoController@pruebas')->name('pruebas');

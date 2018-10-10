@@ -99,36 +99,6 @@ Subir cambios a GitHub
 git commit -a -m "Dando forma a los repostes desde la ruta /pagos y la ruta /buscar"
 git push origin master
 
-Si hay problemas en el protocolo de github cambiarlo con la info especificada aqui:
-
-https://help.github.com/articles/changing-a-remote-s-url/
-
-    Switching remote URLs from SSH to HTTPS
-    
-    1. Open Terminal.
-
-    2. Change the current working directory to your local project.
-
-    3. List your existing remotes in order to get the name of the remote you want to change.
-
-        git remote -v
-        origin  git@github.com:USERNAME/REPOSITORY.git (fetch)
-        origin  git@github.com:USERNAME/REPOSITORY.git (push)
-    
-    4. Change your remote's URL from SSH to HTTPS with the git remote set-url command.
-
-        git remote set-url origin https://github.com/USERNAME/REPOSITORY.git
-    
-    5. Verify that the remote URL has changed.
-
-        git remote -v
-
-        # Verify new remote URL
-        origin  https://github.com/USERNAME/REPOSITORY.git (fetch)
-        origin  https://github.com/USERNAME/REPOSITORY.git (push)
-    
-    The next time you git fetch, git pull, or git push to the remote repository, you'll be asked for your GitHub username and password.
-
 ######################
 Bitacora de desarrollo
 ######################
@@ -290,11 +260,11 @@ https://www.youtube.com/watch?v=__QLbIo1AwQ
         Tabla pagos:
 
             INSERT INTO `pagos` (`id`, `fecha`, `empleado_id`, `concepto_id`, `monto`, `created_at`, `updated_at`) VALUES
-            (1, '2018-01-15',   1,  1,  1800,   NULL,   NULL),
-            (2, '2018-01-15',   1,  2,  220,    NULL,   NULL),
-            (3, '2018-01-15',   1,  3,  150,    NULL,   NULL),
-            (4, '2018-01-15',   1,  4,  50, NULL,   NULL),
-            (5, '2018-01-15',   1,  5,  20, NULL,   NULL);
+            (2, '2018-01-15',   1,  1,  1800,   NULL,   NULL),
+            (3, '2018-01-15',   1,  2,  220,    NULL,   NULL),
+            (4, '2018-01-15',   1,  3,  150,    NULL,   NULL),
+            (5, '2018-01-15',   1,  4,  50, NULL,   NULL),
+            (6, '2018-01-15',   1,  5,  20, NULL,   NULL);
 
     - Crear vista
         
@@ -363,37 +333,23 @@ https://www.youtube.com/watch?v=fJmSZVQIbXs
             return $this->hasMany(Pago::class);
         }
 
-#########################################################
-Consultar registros y sus datos relacionados con eloquent
-#########################################################
+#############################################################################
+Notas sobre programacion dentro de controladores y vistas
+#############################################################################
 
-https://laraveles.com/foro/viewtopic.php?id=5787
+    Controlador: PagoController.php@pruebas
 
-routes/web.php
+    //https://laracasts.com/discuss/channels/eloquent/eloquent-equivalent-of-inner-join?page=1
+    //https://laravel.io/forum/07-21-2015-eloquent-between-two-dates-from-database
+    //https://richos.gitbooks.io/laravel-5/content/capitulos/chapter7.html
+    //https://es.stackoverflow.com/questions/176828/consulta-m%C3%BAltiples-tablas-con-laravel-eloquent
+    //https://es.stackoverflow.com/questions/115244/como-consultar-registros-entre-dos-tablas-relacionadas-en-laravel
+    //https://laraveles.com/foro/viewtopic.php?id=6079
+    //http://www.rephp.com/laravel-eloquent-suma-de-la-columna-de-relacion.html
 
-    Route::get('/pruebas', 'PagoController@pruebas')->name('pruebas');
+    //http://laragems.com/post/eloquent-cheat-sheet
 
-PagoController@pruebas
+    //https://scotch.io/tutorials/a-guide-to-using-eloquent-orm-in-laravel
+    //https://eloquentbyexample.com
 
-    public function pruebas(){
-
-        $pagos = Pago::findOrfail(5);    
-        $empleado = $pagos->empleado;
-        $concepto =  $pagos->concepto;
-        
-        return view('pruebas', compact('pagos','empleado','concepto'));
-        
-    }
-
-pruebas.blade.php
-
-    <li>empleado_id: {{$pagos->empleado_id}}</li>
-    <li>empleado_nombre: {{$empleado->nombre}}</li>
-    <br />
-    <li>pagos_id:{{$pagos->id}}</li>
-    <li>pagos_fecha: {{$pagos->fecha}}</li>
-    <li>pagos_monto: {{$pagos->monto}}</li>
-    <br />
-    <li>concepto_id: {{$pagos->concepto_id}}</li>
-    <li>concepto_tipo: {{$concepto->tipo}}</li>
-    <li>concepto_descripcion: {{$concepto->descripcion}}</li>
+    Vista: pagos.blade.php
