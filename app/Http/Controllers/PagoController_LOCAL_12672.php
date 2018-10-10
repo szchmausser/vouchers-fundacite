@@ -14,18 +14,13 @@ class PagoController extends Controller
      * @return \Illuminate\Http\Response
      */     
     
-<<<<<<< HEAD
     public function prueba($fecha_inicio, $fecha_fin, $empleado_objetivo){
-=======
-    public function pruebas($fecha_inicio, $fecha_fin, $empleado_objetivo){
->>>>>>> 537c41d5636cc6c8f4e5100fc17ca1889acae598
         
         $empleado = Pago::
             join('empleados','pagos.empleado_id', '=', 'empleados.id')
             ->where('empleado_id','=',$empleado_objetivo)
             ->first();
 
-<<<<<<< HEAD
         /*$asignaciones = Pago::
             join('conceptos','pagos.concepto_id', '=', 'conceptos.id')
             ->where('empleado_id','=',$empleado_objetivo)
@@ -33,8 +28,6 @@ class PagoController extends Controller
             ->where('conceptos.tipo','=','Asignacion')
             ->get();*/
 
-=======
->>>>>>> 537c41d5636cc6c8f4e5100fc17ca1889acae598
         $asignaciones = Pago::
             join('conceptos','pagos.concepto_id', '=', 'conceptos.id')
             ->where('empleado_id','=',$empleado_objetivo)
@@ -72,7 +65,6 @@ class PagoController extends Controller
             echo "<li>".$asignacion->concepto->descripcion ." ". $asignacion->monto. " ". $asignacion->fecha."</li>";
         }
         
-<<<<<<< HEAD
         echo "<br />";
         echo "Total asignaciones: ".$total_asignaciones;
         echo "<br /><br />";
@@ -102,19 +94,6 @@ class PagoController extends Controller
         
         //return $pagos = $todos_pagos->where('empleado_id','=', 1)->where('fecha','>=','2018-01-16')->where('fecha','<=','2018-01-31');
         
-=======
-        return view('pagos', compact('fecha_inicio','fecha_fin','empleado','asignaciones','deducciones'));
-
-    }
-    
-    public function index()
-    { 
-        //Buscar un pagos
-        dd ($todos_pagos = Pago::all());
-        
-        //return $pagos = $todos_pagos->where('empleado_id','=', 1)->where('fecha','>=','2018-01-16')->where('fecha','<=','2018-01-31');
-        
->>>>>>> 537c41d5636cc6c8f4e5100fc17ca1889acae598
         //$asignaciones = $pagos->concepto->where('tipo','=','Asignacion')->get();
         //$deducciones = $pagos->concepto->where('tipo','=','Deduccion')->get();
 

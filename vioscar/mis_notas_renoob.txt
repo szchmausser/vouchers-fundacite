@@ -333,43 +333,23 @@ https://www.youtube.com/watch?v=fJmSZVQIbXs
             return $this->hasMany(Pago::class);
         }
 
-    Controlador: PagoController.php@index
+#############################################################################
+Notas sobre programacion dentro de controladores y vistas
+#############################################################################
 
-        <!--Buscar un registro en especifico-->
-        -------------------------------------------------------------
-            //buscar un pago en especifico
-            $pagos = Pago::find(7);
+    Controlador: PagoController.php@pruebas
 
-            //Consultar datos relacionados y almacenarlo en una variable
-            $valores = $pagos->empleado->cedula;
+    //https://laracasts.com/discuss/channels/eloquent/eloquent-equivalent-of-inner-join?page=1
+    //https://laravel.io/forum/07-21-2015-eloquent-between-two-dates-from-database
+    //https://richos.gitbooks.io/laravel-5/content/capitulos/chapter7.html
+    //https://es.stackoverflow.com/questions/176828/consulta-m%C3%BAltiples-tablas-con-laravel-eloquent
+    //https://es.stackoverflow.com/questions/115244/como-consultar-registros-entre-dos-tablas-relacionadas-en-laravel
+    //https://laraveles.com/foro/viewtopic.php?id=6079
+    //http://www.rephp.com/laravel-eloquent-suma-de-la-columna-de-relacion.html
 
-            //Enviar los datos almacenados en la variable a la vista
-            return view('pagos',compact('valores'));
-        -------------------------------------------------------------
+    //http://laragems.com/post/eloquent-cheat-sheet
 
-        <!--Buscar todos los registros-->
-        -------------------------------------------------------------
-            //buscar todos los registros y almacenarlo en una variable
-            $valores = Pago::all();
-
-            //Enviar los datos almacenados en la variable a la vista
-            return view('pagos',compact('valores'));
+    //https://scotch.io/tutorials/a-guide-to-using-eloquent-orm-in-laravel
+    //https://eloquentbyexample.com
 
     Vista: pagos.blade.php
-
-        <!--Mostrar variable que almacena un unico registro-->
-        -------------------------------------------------------------
-            {{$valores}}
-        -------------------------------------------------------------
-
-        <!--Mostrar variable que almacena multiples registros-->
-        -------------------------------------------------------------
-            @foreach ($valores as $valor)
-                <li>{{ $valor->monto }}</li>
-                <li>{{ $valor->concepto->descripcion }}</li>
-                <li>{{ $valor->empleado->cedula }}</li>
-                <li>{{ $valor->empleado->nombre }}</li>
-                <li>{{ $valor->empleado->apellido }}</li>
-                <br />
-            @endforeach
-        -------------------------------------------------------------
