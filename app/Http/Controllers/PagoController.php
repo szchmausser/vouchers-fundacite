@@ -15,7 +15,11 @@ class PagoController extends Controller
      */     
     
 <<<<<<< HEAD
+<<<<<<< HEAD
     public function prueba($fecha_inicio, $fecha_fin, $empleado_objetivo){
+=======
+    public function pruebas($fecha_inicio, $fecha_fin, $empleado_objetivo){
+>>>>>>> 537c41d5636cc6c8f4e5100fc17ca1889acae598
 =======
     public function pruebas($fecha_inicio, $fecha_fin, $empleado_objetivo){
 >>>>>>> 537c41d5636cc6c8f4e5100fc17ca1889acae598
@@ -26,6 +30,7 @@ class PagoController extends Controller
             ->first();
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         /*$asignaciones = Pago::
             join('conceptos','pagos.concepto_id', '=', 'conceptos.id')
             ->where('empleado_id','=',$empleado_objetivo)
@@ -33,6 +38,8 @@ class PagoController extends Controller
             ->where('conceptos.tipo','=','Asignacion')
             ->get();*/
 
+=======
+>>>>>>> 537c41d5636cc6c8f4e5100fc17ca1889acae598
 =======
 >>>>>>> 537c41d5636cc6c8f4e5100fc17ca1889acae598
         $asignaciones = Pago::
@@ -73,6 +80,7 @@ class PagoController extends Controller
         }
         
 <<<<<<< HEAD
+<<<<<<< HEAD
         echo "<br />";
         echo "Total asignaciones: ".$total_asignaciones;
         echo "<br /><br />";
@@ -93,12 +101,17 @@ class PagoController extends Controller
         
         echo "TOTAL A COBRAR: ";
         echo ($total_asignaciones)-($total_deducciones);
+=======
+        return view('pagos', compact('fecha_inicio','fecha_fin','empleado','asignaciones','deducciones'));
+
+>>>>>>> 537c41d5636cc6c8f4e5100fc17ca1889acae598
     }
     
     public function index()
     { 
         //Buscar un pagos
         dd ($todos_pagos = Pago::all());
+<<<<<<< HEAD
         
         //return $pagos = $todos_pagos->where('empleado_id','=', 1)->where('fecha','>=','2018-01-16')->where('fecha','<=','2018-01-31');
         
@@ -111,6 +124,11 @@ class PagoController extends Controller
     { 
         //Buscar un pagos
         dd ($todos_pagos = Pago::all());
+        
+        //return $pagos = $todos_pagos->where('empleado_id','=', 1)->where('fecha','>=','2018-01-16')->where('fecha','<=','2018-01-31');
+        
+>>>>>>> 537c41d5636cc6c8f4e5100fc17ca1889acae598
+=======
         
         //return $pagos = $todos_pagos->where('empleado_id','=', 1)->where('fecha','>=','2018-01-16')->where('fecha','<=','2018-01-31');
         

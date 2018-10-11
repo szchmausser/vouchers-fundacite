@@ -24,7 +24,13 @@ Route::resource('conceptos', 'ConceptoController');
 Route::resource('pagos', 'PagoController');
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 Route::get('/prueba/{fecha_inicio}/{fecha_fin}/{empleado_objetivo}','PagoController@prueba')->name('prueba');
+=======
+Route::get('buscar/{fecha_inicio}/{fecha_fin}/{buscar}','PagoController@buscar')->name('buscar');
+
+Route::get('/pruebas/{fecha_inicio}/{fecha_fin}/{empleado_objetivo}', 'PagoController@pruebas')->name('pruebas');
+>>>>>>> 537c41d5636cc6c8f4e5100fc17ca1889acae598
 =======
 Route::get('buscar/{fecha_inicio}/{fecha_fin}/{buscar}','PagoController@buscar')->name('buscar');
 

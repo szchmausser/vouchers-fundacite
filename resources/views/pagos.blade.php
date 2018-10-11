@@ -23,6 +23,7 @@
                     <hr>
                     
 <<<<<<< HEAD
+<<<<<<< HEAD
                     <h2>Asignaciones:</h2>
                     <!--Mostrar variable que almacena multiples registro-->
                     @foreach ($asignaciones as $asignacion)
@@ -56,6 +57,28 @@
                     <hr>
 >>>>>>> 537c41d5636cc6c8f4e5100fc17ca1889acae598
                     
+=======
+                    <h5>Asignaciones:</h5>
+  
+                        @foreach ($asignaciones as $asignacion)
+                            <li>{{$asignacion->concepto->descripcion}} {{$asignacion->monto}}</li>
+                        @endforeach
+
+                    <hr>
+                        <b>Total asignaciones: {{$asignaciones->sum('monto')}}</b>    
+                    <hr>
+                    
+                    <h5>Deducciones:</h5>
+  
+                        @foreach ($deducciones as $deduccion)
+                            <li>{{$deduccion->concepto->descripcion}} {{$deduccion->monto}}</li>
+                        @endforeach
+
+                    <hr>
+                        <b>Total deducciones: {{$deducciones->sum('monto')}}</b>
+                    <hr>
+                    
+>>>>>>> 537c41d5636cc6c8f4e5100fc17ca1889acae598
                     <hr>
                         
                     <h4>Total a cobrar: {{$asignaciones->sum('monto') - $deducciones->sum('monto')}}</h4>
