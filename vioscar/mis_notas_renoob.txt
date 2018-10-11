@@ -96,8 +96,58 @@ Espero les sea de utilidad.
 Subir cambios a GitHub
 ######################
 
-git commit -a -m "Dando forma a los repostes desde la ruta /pagos y la ruta /buscar"
-git push origin master
+	De forma rapida:
+
+		git commit -a -m "Dando forma a los repostes desde la ruta /pagos y la ruta /buscar"
+
+	Seria conveniente en vez de subir todo, como en el comando anteriro, ir revisando y agregando los archivos uno por uno con:
+
+		git add mi_archivo
+		git commit -m "mi mensaje"
+
+	Al final subir los cambios a github
+		
+		git push origin master
+
+########################################################
+Configurar Meld para hacer diff y merge de forma grafica
+########################################################
+
+https://stackoverflow.com/questions/34119866/setting-up-and-using-meld-as-your-git-difftool-and-mergetool
+
+	Editar
+
+		/mi_proyecto/.git/config
+
+	Agregar:
+
+		[diff]
+		    tool = meld
+		[difftool]
+		    prompt = false
+		[difftool "meld"]
+		    cmd = meld "$LOCAL" "$REMOTE"
+		[merge]
+		    tool = meld
+		[mergetool]
+		    prompt = false
+		[mergetool "meld"]
+		    cmd = meld "$LOCAL" "$REMOTE"
+
+	Pasos para especificar la carpeta de instalacion de Meld en el $PATH de Windows:
+
+		Propiedades del Equipo/Mi PC ->
+		Configuracion avanzada del sistema ->
+		Opciones Avanzadas -> Variables de entorno ->
+		Variables de usuario para Usuario ->
+		Path ->
+		Editar ->
+		Escoger casilla en blanco ->
+		Nuevo->
+
+	Agregar:
+
+		C:\Program Files (x86)\Meld
 
 ######################
 Bitacora de desarrollo
